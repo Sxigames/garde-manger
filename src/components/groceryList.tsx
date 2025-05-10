@@ -36,6 +36,7 @@ export default function GroceryList() {
               <span>Expires: {new Date(grocery.expirationDate).toLocaleDateString()}</span>
               <button onClick={() => handleAddQuantity(grocery.id)}>+</button>
               <button onClick={() => handleRemoveQuantity(grocery.id)}>-</button>
+             <span className={grocery.expirationDate < Date.now() ? "text-red-600" : "invisible"}>EXPIRED!</span>
             </div>
           </li>
         ))}
