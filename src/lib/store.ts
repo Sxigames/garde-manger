@@ -3,9 +3,11 @@ import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import groceryReducer from './features/grocery/grocerySlice';
+import groceryPresetReducer from './features/preset/presetSlice';
 
 const reducers = combineReducers({
     grocery: groceryReducer,
+    preset: groceryPresetReducer,
 });
 const persistConfig = {
     key: 'root',

@@ -1,50 +1,48 @@
 'use client';
 import { useState } from "react";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addGrocery } from "@/lib/features/grocery/grocerySlice";
 
 export default function NewGroceryForm() {
-  const [groceryName, setGroceryName] = useState("");
-  const [groceryUnit, setGroceryUnit] = useState("");
+  const presets = useAppSelector((state) => state.preset.groceryPresets);
+  const [selectedPreset, setSelectedPreset] = useState<number | null>(null);
   const [groceryQuantity, setGroceryQuantity] = useState(1);
   const [groceryExpirationDate, setGroceryExpirationDate] = useState(Date.now());
   const dispatch = useAppDispatch();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (groceryName.trim() === "") return;
+    if (selectedPreset === null) return;
     dispatch(addGrocery({
       id: Date.now(),
-      name: groceryName,
+      presetID: selectedPreset,
       quantity: groceryQuantity,
-      unit: groceryUnit,
-      expirationDate: groceryExpirationDate
+      expirationDate: groceryExpirationDate,
     }));
-    setGroceryName("");
-    setGroceryUnit("");
+    setSelectedPreset(null);
+    setGroceryQuantity(1);
+    setGroceryExpirationDate(Date.now());
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
-      <input
-        type="text"
-        value={groceryName}
-        onChange={(e) => setGroceryName(e.target.value)}
-        placeholder="Grocery name"
+      <select
+        value={selectedPreset ?? ""}
+        onChange={(e) => setSelectedPreset(Number(e.target.value))}
         className="border border-gray-300 rounded p-2"
-      />
+      >
+        <option value="" disabled>Select a preset</option>
+        {presets.map((preset) => (
+          <option key={preset.id} value={preset.id}>
+            {preset.name}
+          </option>
+        ))}
+      </select>
        <input
         type="number"
         value={groceryQuantity}
         onChange={(e) => setGroceryQuantity(Number(e.target.value))}
         placeholder="Quantity"
-        className="border border-gray-300 rounded p-2"
-      />
-      <input
-        type="text"
-        value={groceryUnit}
-        onChange={(e) => setGroceryUnit(e.target.value)}
-        placeholder="Measurement unit"
         className="border border-gray-300 rounded p-2"
       />
       <input

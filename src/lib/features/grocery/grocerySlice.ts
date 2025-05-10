@@ -2,9 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Grocery {
     id: number;
-    name: string;
+    presetID: number;
     quantity: number;
-    unit: string;
     expirationDate: number;
 }
 
@@ -44,8 +43,13 @@ const grocerySlice = createSlice({
             grocery.quantity -= 1;
         }
     },
+    removeGroceriesByPreset: (state, action: PayloadAction<number>) => {
+        state.groceries = state.groceries.filter(
+            (grocery) => grocery.presetID !== action.payload
+        );
+    },
   },
 });
 
-export const { addGrocery, removeGrocery, addQuantity, removeQuantity } = grocerySlice.actions;
+export const { addGrocery, removeGrocery, addQuantity, removeQuantity, removeGroceriesByPreset } = grocerySlice.actions;
 export default grocerySlice.reducer;

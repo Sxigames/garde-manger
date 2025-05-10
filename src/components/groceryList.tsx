@@ -4,6 +4,7 @@ import { removeGrocery, addQuantity, removeQuantity } from "@/lib/features/groce
 
 export default function GroceryList() {
   const groceries = useAppSelector((state) => state.grocery.groceries);
+  const presets = useAppSelector((state) => state.preset.groceryPresets);
   const dispatch = useAppDispatch();
 
   const handleRemove = (id: number) => {
@@ -20,6 +21,7 @@ export default function GroceryList() {
     <div>
       <ul className="flex flex-col gap-[32px]">
         {groceries.map((grocery) => (
+          
           <li key={grocery.id} className="flex flex-col gap-[32px]">
             <div className="flex flex-row gap-[32px]">
               <button
@@ -28,7 +30,9 @@ export default function GroceryList() {
               >
                 x
               </button>
-              <span>{grocery.quantity} {grocery.name} {grocery.unit}</span>
+              <span>{grocery.quantity}</span>
+              <span>{presets.find((preset) => preset.id === grocery.presetID)?.name}</span>
+              <span>{presets.find((preset) => preset.id === grocery.presetID)?.unit}</span>
               <span>Expires: {new Date(grocery.expirationDate).toLocaleDateString()}</span>
               <button onClick={() => handleAddQuantity(grocery.id)}>+</button>
               <button onClick={() => handleRemoveQuantity(grocery.id)}>-</button>
