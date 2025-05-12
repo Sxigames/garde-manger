@@ -7,30 +7,35 @@ import { Button } from "./ui/button";
 import { Camera, CirclePlus } from "lucide-react";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogClose } from "./ui/dialog";
+import { Label } from "./ui/label";
 
 export default function NewGroceryForm() {
   const [groceryName, setGroceryName] = useState("");
   const [groceryUnit, setGroceryUnit] = useState("");
   const [groceryBarcode, setGroceryBarcode] = useState("");
   const [scannerOpen, setScannerOpen] = useState(false);
+  const [groceryImage, setGroceryImage] = useState<File | null>(null);
   const dispatch = useAppDispatch();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const base64 = await toBase64(groceryImage as File);
     if (groceryName.trim() === "") return;
     dispatch(addGroceryPreset({
       id: Date.now(),
       name: groceryName,
       unit: groceryUnit,
       barcode: groceryBarcode ? groceryBarcode : undefined,
+      image: groceryImage ? base64 as string : undefined,
     }));
     setGroceryName("");
     setGroceryUnit("");
     setGroceryBarcode("");
+    setGroceryImage(null);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-[16px]">
       <Input
         type="text"
         value={groceryName}
@@ -87,6 +92,10 @@ export default function NewGroceryForm() {
         </DialogContent>
       </Dialog>
       </div>
+      <div>
+      <Label>Image(optional)</Label>
+      <Input type="file" onChange={(e) => setGroceryImage(e.target.files ? e.target.files[0] : null)} />
+      </div>
       <DialogClose asChild>
       <Button type="submit">
         <CirclePlus /> Add Preset
@@ -95,3 +104,18 @@ export default function NewGroceryForm() {
     </form>
   );
 }
+const toBase64 = (file: File) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+
+    fileReader.readAsDataURL(file);
+
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+
+    fileReader.onerror = (error) => {
+      reject(error);
+    };
+  });
+};

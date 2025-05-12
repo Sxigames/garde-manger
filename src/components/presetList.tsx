@@ -5,8 +5,9 @@ import { removeGroceryPreset } from "@/lib/features/preset/presetSlice";
 import { removeGroceriesByPreset } from "@/lib/features/grocery/grocerySlice";
 import { Button } from "./ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { Trash } from "lucide-react";
+import { CookingPot, Trash } from "lucide-react";
 import Barcode  from "react-barcode";
+import Image from "next/image";
 
 export default function PresetList() {
     const presets = useAppSelector((state) => state.preset.groceryPresets);
@@ -22,6 +23,7 @@ export default function PresetList() {
                 <TableCaption>Your grocery presets</TableCaption>
                 <TableHeader>
                     <TableRow>
+                        <TableHead></TableHead>
                         <TableHead></TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Unit</TableHead>
@@ -39,6 +41,9 @@ export default function PresetList() {
                             >
                             <Trash />
                             </Button>
+                        </TableCell>
+                        <TableCell>
+                            {preset.image ? <Image src={preset.image} alt={preset.name} width={20} height={20}/> : <CookingPot />}
                         </TableCell>
                         <TableCell>
                             {preset.name}

@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { Pencil, Trash, CirclePlus, CircleMinus, TriangleAlert } from "lucide-react";
+import { Pencil, Trash, CirclePlus, CircleMinus, TriangleAlert, CookingPot } from "lucide-react";
+import Image from "next/image";
 
 export default function GroceryList() {
   const groceries = useAppSelector((state) => state.grocery.groceries);
@@ -35,10 +36,15 @@ export default function GroceryList() {
         <TableHeader>
           <TableRow>
             <TableHead></TableHead>
+            <TableHead></TableHead>
             <TableHead>Quantity</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Unit</TableHead>
             <TableHead>Expiration Date</TableHead>
+            <TableHead></TableHead>
+            <TableHead></TableHead>
+            <TableHead></TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -53,6 +59,13 @@ export default function GroceryList() {
               >
                 <Trash />
               </Button>
+              </TableCell>
+              <TableCell>
+                {presets.find((preset) => preset.id === grocery.presetID)?.image ? (
+                  <Image src={presets.find((preset) => preset.id === grocery.presetID)?.image || "/fallback-image.png"} alt={presets.find((preset) => preset.id === grocery.presetID)?.name || "Grocery item"} width={20} height={20}/>
+                ) : (
+                  <CookingPot />
+                )}
               </TableCell>
               <TableCell>{grocery.quantity}</TableCell>
               <TableCell>{presets.find((preset) => preset.id === grocery.presetID)?.name}</TableCell>
