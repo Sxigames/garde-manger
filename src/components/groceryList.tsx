@@ -64,7 +64,9 @@ export default function GroceryList() {
               <Dialog>
                 <DialogTrigger asChild>
                   <TableCell>
-                  <Button>Edit</Button>
+                  <Button asChild>
+                    <div>Edit</div>
+                    </Button>
                   </TableCell>
                   </DialogTrigger>
                 <DialogContent>
