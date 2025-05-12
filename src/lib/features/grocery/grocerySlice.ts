@@ -27,20 +27,13 @@ const grocerySlice = createSlice({
             (grocery) => grocery.id !== action.payload
         );
     },
-    addQuantity: (state, action: PayloadAction<number>) => {
-        const grocery = state.groceries.find(
-            (grocery) => grocery.id === action.payload
-        );
+    setQuantity: (state, action: PayloadAction<{ id: number; quantity: number }>) => {
+        const grocery = state.groceries.find((grocery) => grocery.id === action.payload.id);
         if (grocery) {
-            grocery.quantity += 1;
-        }
-    },
-    removeQuantity: (state, action: PayloadAction<number>) => {
-        const grocery = state.groceries.find(
-            (grocery) => grocery.id === action.payload
-        );
-        if (grocery && grocery.quantity > 1) {
-            grocery.quantity -= 1;
+            if (action.payload.quantity < 1) {
+                return;
+            }
+            grocery.quantity = action.payload.quantity;
         }
     },
     removeGroceriesByPreset: (state, action: PayloadAction<number>) => {
@@ -51,5 +44,5 @@ const grocerySlice = createSlice({
   },
 });
 
-export const { addGrocery, removeGrocery, addQuantity, removeQuantity, removeGroceriesByPreset } = grocerySlice.actions;
+export const { addGrocery, removeGrocery, setQuantity, removeGroceriesByPreset } = grocerySlice.actions;
 export default grocerySlice.reducer;

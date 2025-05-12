@@ -1,6 +1,17 @@
 'use client';
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { removeGrocery, addQuantity, removeQuantity } from "@/lib/features/grocery/grocerySlice";
+import { removeGrocery, setQuantity } from "@/lib/features/grocery/grocerySlice";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button";
+import { Input } from "./ui/input";
 
 export default function GroceryList() {
   const groceries = useAppSelector((state) => state.grocery.groceries);
@@ -10,12 +21,9 @@ export default function GroceryList() {
   const handleRemove = (id: number) => {
     dispatch(removeGrocery(id));
   };
-  const handleAddQuantity = (id: number) => {
-    dispatch(addQuantity(id));
-  };
-  const handleRemoveQuantity = (id: number) => {
-    dispatch(removeQuantity(id));
-  };
+  const handleSetQuantity = (id: number, quantity: number) => {
+    dispatch(setQuantity({ id, quantity }));
+  }
 
   return (
     <div>
@@ -34,8 +42,23 @@ export default function GroceryList() {
               <span>{presets.find((preset) => preset.id === grocery.presetID)?.name}</span>
               <span>{presets.find((preset) => preset.id === grocery.presetID)?.unit}</span>
               <span>Expires: {new Date(grocery.expirationDate).toLocaleDateString()}</span>
-              <button onClick={() => handleAddQuantity(grocery.id)}>+</button>
-              <button onClick={() => handleRemoveQuantity(grocery.id)}>-</button>
+              <button onClick={() => handleSetQuantity(grocery.id, grocery.quantity + 1)}>+</button>
+              <Dialog>
+                <DialogTrigger><Button>Edit</Button></DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>New Quantity</DialogTitle>
+                    <DialogDescription>
+                      Input the new quantity for {presets.find((preset) => preset.id === grocery.presetID)?.name}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <Input id="newQuantity" type="number" value={grocery.quantity} onChange={(e) => handleSetQuantity(grocery.id, parseInt(e.target.value))}/>
+                  <DialogClose>
+                  <Button type="submit">Save</Button>
+                  </DialogClose>
+                </DialogContent>
+              </Dialog>
+              <button onClick={() => handleSetQuantity(grocery.id, grocery.quantity - 1)}>-</button>
              <span className={grocery.expirationDate < Date.now() ? "text-red-600" : "invisible"}>EXPIRED!</span>
             </div>
           </li>
