@@ -4,12 +4,15 @@ import { useAppDispatch } from "@/lib/hooks";
 import { addGroceryPreset } from "@/lib/features/preset/presetSlice";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { CirclePlus } from "lucide-react";
+import { Camera, CirclePlus } from "lucide-react";
+import { Scanner } from "@yudiel/react-qr-scanner";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader } from "./ui/dialog";
 
 export default function NewGroceryForm() {
   const [groceryName, setGroceryName] = useState("");
   const [groceryUnit, setGroceryUnit] = useState("");
   const [groceryBarcode, setGroceryBarcode] = useState("");
+  const [scannerOpen, setScannerOpen] = useState(false);
   const dispatch = useAppDispatch();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -40,12 +43,50 @@ export default function NewGroceryForm() {
         onChange={(e) => setGroceryUnit(e.target.value)}
         placeholder="Measurement unit"
       />
+    <div className="flex flex-row gap-2">
       <Input
         type="text"
         value={groceryBarcode}
         onChange={(e) => setGroceryBarcode(e.target.value)}
         placeholder="Barcode(optional)"
       />
+      <Dialog open={scannerOpen} onOpenChange={setScannerOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" size="icon"><Camera /></Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Scan Barcode</DialogTitle>
+            <DialogDescription>
+              Scan the barcode of the grocery item.
+            </DialogDescription>
+          </DialogHeader>
+          <Scanner formats={[
+          "qr_code",
+          "micro_qr_code",
+          "rm_qr_code",
+          "maxi_code",
+          "pdf417",
+          "aztec",
+          "data_matrix",
+          "matrix_codes",
+          "dx_film_edge",
+          "databar",
+          "databar_expanded",
+          "codabar",
+          "code_39",
+          "code_93",
+          "code_128",
+          "ean_8",
+          "ean_13",
+          "itf",
+          "linear_codes",
+          "upc_a",
+          "upc_e",
+        ]} onScan={(result) => {setGroceryBarcode(result[0].rawValue); setScannerOpen(false)}}/>
+        </DialogContent>
+      </Dialog>
+      </div>
       <Button type="submit">
         <CirclePlus /> Add Preset
       </Button>

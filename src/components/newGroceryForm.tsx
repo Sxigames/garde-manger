@@ -5,9 +5,11 @@ import { addGrocery } from "@/lib/features/grocery/grocerySlice";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { CirclePlus } from "lucide-react";
+import { Camera, CirclePlus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Label } from "./ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Scanner } from "@yudiel/react-qr-scanner"
 
 export default function NewGroceryForm() {
   const presets = useAppSelector((state) => state.preset.groceryPresets);
@@ -15,6 +17,7 @@ export default function NewGroceryForm() {
   const [groceryQuantity, setGroceryQuantity] = useState(1);
   const [groceryExpirationDate, setGroceryExpirationDate] = useState(Date.now());
   const [groceryBarcode, setGroceryBarcode] = useState("");
+  const [scannerOpen, setScannerOpen] = useState(false);
   const dispatch = useAppDispatch();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -44,64 +47,100 @@ export default function NewGroceryForm() {
         <TabsTrigger value="barcode">Input Barcode</TabsTrigger>
       </TabsList>
       <TabsContent value="select">
-    <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
-      <Select onValueChange={(value) => setSelectedPreset(Number(value))}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select a preset" />
-        </SelectTrigger>
-        <SelectContent>
-        {presets.map((preset) => (
-          <SelectItem key={preset.id} value={preset.id.toString()}>
-            {preset.name}
-          </SelectItem>
-        ))}
-        </SelectContent>
-      </Select>
-       <Input
-        type="number"
-        value={groceryQuantity}
-        onChange={(e) => setGroceryQuantity(Number(e.target.value))}
-        placeholder="Quantity"
-      />
-      <Input
-        type="date"
-        value={new Date(groceryExpirationDate).toISOString().split("T")[0]}
-        onChange={(e) => setGroceryExpirationDate(new Date(e.target.value).getTime())}
-        placeholder="Expiration date"
-      />
-      <Button type="submit" >
-        <CirclePlus /> Add Grocery
-      </Button>
-    </form>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
+          <Select onValueChange={(value) => setSelectedPreset(Number(value))}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a preset" />
+            </SelectTrigger>
+            <SelectContent>
+            {presets.map((preset) => (
+              <SelectItem key={preset.id} value={preset.id.toString()}>
+                {preset.name}
+              </SelectItem>
+            ))}
+            </SelectContent>
+          </Select>
+          <Input
+            type="number"
+            value={groceryQuantity}
+            onChange={(e) => setGroceryQuantity(Number(e.target.value))}
+            placeholder="Quantity"
+          />
+          <Input
+            type="date"
+            value={new Date(groceryExpirationDate).toISOString().split("T")[0]}
+            onChange={(e) => setGroceryExpirationDate(new Date(e.target.value).getTime())}
+            placeholder="Expiration date"
+          />
+          <Button type="submit" >
+            <CirclePlus /> Add Grocery
+          </Button>
+        </form>
     </TabsContent>
       <TabsContent value="barcode">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
-              <div className="flex flex-row gap-2">
-      <Input
-        type="text"
-        value={groceryBarcode}
-        onChange={(e) => setBarcode(e.target.value)}
-        placeholder="Barcode"
-      />
-      <Label>{presets.find(preset => preset.barcode === groceryBarcode)?.name || "no matching barcode"}</Label>
-      </div>
-       
-       <Input
-        type="number"
-        value={groceryQuantity}
-        onChange={(e) => setGroceryQuantity(Number(e.target.value))}
-        placeholder="Quantity"
-      />
-      <Input
-        type="date"
-        value={new Date(groceryExpirationDate).toISOString().split("T")[0]}
-        onChange={(e) => setGroceryExpirationDate(new Date(e.target.value).getTime())}
-        placeholder="Expiration date"
-      />
-      <Button type="submit" >
-        <CirclePlus /> Add Grocery
-      </Button>
-    </form>
+              <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
+                <div className="flex flex-row gap-2">
+                  <Input
+                    type="text"
+                    value={groceryBarcode}
+                    onChange={(e) => setBarcode(e.target.value)}
+                    placeholder="Barcode"
+                  />
+                  <Dialog open={scannerOpen} onOpenChange={setScannerOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="icon"><Camera /></Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Scan Barcode</DialogTitle>
+                        <DialogDescription>
+                          Scan the barcode of the grocery item.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <Scanner formats={[
+                      "qr_code",
+                      "micro_qr_code",
+                      "rm_qr_code",
+                      "maxi_code",
+                      "pdf417",
+                      "aztec",
+                      "data_matrix",
+                      "matrix_codes",
+                      "dx_film_edge",
+                      "databar",
+                      "databar_expanded",
+                      "codabar",
+                      "code_39",
+                      "code_93",
+                      "code_128",
+                      "ean_8",
+                      "ean_13",
+                      "itf",
+                      "linear_codes",
+                      "upc_a",
+                      "upc_e",
+                    ]} onScan={(result) => {setBarcode(result[0].rawValue); setScannerOpen(false)}}/>
+                    </DialogContent>
+                  </Dialog>
+                  <Label>{presets.find(preset => preset.barcode === groceryBarcode)?.name || "no matching barcode"}</Label>
+                </div>
+              
+              <Input
+                type="number"
+                value={groceryQuantity}
+                onChange={(e) => setGroceryQuantity(Number(e.target.value))}
+                placeholder="Quantity"
+              />
+              <Input
+                type="date"
+                value={new Date(groceryExpirationDate).toISOString().split("T")[0]}
+                onChange={(e) => setGroceryExpirationDate(new Date(e.target.value).getTime())}
+                placeholder="Expiration date"
+              />
+              <Button type="submit" >
+                <CirclePlus /> Add Grocery
+              </Button>
+            </form>
         </TabsContent>
     </Tabs>
   );
