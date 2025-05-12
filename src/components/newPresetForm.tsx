@@ -9,6 +9,7 @@ import { CirclePlus } from "lucide-react";
 export default function NewGroceryForm() {
   const [groceryName, setGroceryName] = useState("");
   const [groceryUnit, setGroceryUnit] = useState("");
+  const [groceryBarcode, setGroceryBarcode] = useState("");
   const dispatch = useAppDispatch();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -17,10 +18,12 @@ export default function NewGroceryForm() {
     dispatch(addGroceryPreset({
       id: Date.now(),
       name: groceryName,
-      unit: groceryUnit
+      unit: groceryUnit,
+      barcode: groceryBarcode ? groceryBarcode : undefined,
     }));
     setGroceryName("");
     setGroceryUnit("");
+    setGroceryBarcode("");
   };
 
   return (
@@ -37,7 +40,12 @@ export default function NewGroceryForm() {
         onChange={(e) => setGroceryUnit(e.target.value)}
         placeholder="Measurement unit"
       />
-      
+      <Input
+        type="text"
+        value={groceryBarcode}
+        onChange={(e) => setGroceryBarcode(e.target.value)}
+        placeholder="Barcode(optional)"
+      />
       <Button type="submit">
         <CirclePlus /> Add Preset
       </Button>

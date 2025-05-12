@@ -24,6 +24,7 @@ export default function PresetList() {
                         <TableHead>Remove</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Unit</TableHead>
+                        <TableHead>Barcode</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -43,6 +44,9 @@ export default function PresetList() {
                         </TableCell>
                         <TableCell>
                             {preset.unit}
+                        </TableCell>
+                        <TableCell>
+                            {preset.barcode ? preset.barcode : "N/A"}
                         </TableCell>
                     </TableRow>
                 ))}

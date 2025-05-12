@@ -4,6 +4,7 @@ interface GroceryPreset {
     id: number;
     name: string;
     unit: string;
+    barcode?: string;
 }
     
 interface GroceryPresetState {
