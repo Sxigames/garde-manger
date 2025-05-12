@@ -6,6 +6,7 @@ import { removeGroceriesByPreset } from "@/lib/features/grocery/grocerySlice";
 import { Button } from "./ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { Trash } from "lucide-react";
+import Barcode  from "react-barcode";
 
 export default function PresetList() {
     const presets = useAppSelector((state) => state.preset.groceryPresets);
@@ -46,7 +47,7 @@ export default function PresetList() {
                             {preset.unit}
                         </TableCell>
                         <TableCell>
-                            {preset.barcode ? preset.barcode : "N/A"}
+                            {preset.barcode ? <Barcode fontSize={12} height={25} width={1} margin={1}value={preset.barcode}/> : "N/A"}
                         </TableCell>
                     </TableRow>
                 ))}
