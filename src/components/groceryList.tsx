@@ -34,14 +34,11 @@ export default function GroceryList() {
         <TableCaption>Your groceries</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Remove</TableHead>
+            <TableHead></TableHead>
             <TableHead>Quantity</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Unit</TableHead>
             <TableHead>Expiration Date</TableHead>
-            <TableHead>Increase</TableHead>
-            <TableHead>Change Quantity</TableHead>
-            <TableHead>Decrease</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

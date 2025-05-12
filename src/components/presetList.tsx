@@ -21,7 +21,7 @@ export default function PresetList() {
                 <TableCaption>Your grocery presets</TableCaption>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Remove</TableHead>
+                        <TableHead></TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Unit</TableHead>
                         <TableHead>Barcode</TableHead>
