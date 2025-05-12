@@ -5,6 +5,7 @@ import { addGrocery } from "@/lib/features/grocery/grocerySlice";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { CirclePlus } from "lucide-react";
 
 export default function NewGroceryForm() {
   const presets = useAppSelector((state) => state.preset.groceryPresets);
@@ -30,7 +31,7 @@ export default function NewGroceryForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
       <Select onValueChange={(value) => setSelectedPreset(Number(value))}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a preset" />
         </SelectTrigger>
         <SelectContent>
@@ -46,7 +47,6 @@ export default function NewGroceryForm() {
         value={groceryQuantity}
         onChange={(e) => setGroceryQuantity(Number(e.target.value))}
         placeholder="Quantity"
-        className="border border-gray-300 rounded p-2"
       />
       <Input
         type="date"
@@ -55,7 +55,7 @@ export default function NewGroceryForm() {
         placeholder="Expiration date"
       />
       <Button type="submit" >
-        Add Grocery
+        <CirclePlus /> Add Grocery
       </Button>
     </form>
   );

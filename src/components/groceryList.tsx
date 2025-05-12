@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
+import { Pencil, Trash, CirclePlus, CircleMinus, TriangleAlert } from "lucide-react";
 
 export default function GroceryList() {
   const groceries = useAppSelector((state) => state.grocery.groceries);
@@ -53,19 +54,23 @@ export default function GroceryList() {
                 size="icon"
                 onClick={() => handleRemove(grocery.id)}
               >
-                x
+                <Trash />
               </Button>
               </TableCell>
               <TableCell>{grocery.quantity}</TableCell>
               <TableCell>{presets.find((preset) => preset.id === grocery.presetID)?.name}</TableCell>
               <TableCell>{presets.find((preset) => preset.id === grocery.presetID)?.unit}</TableCell>
               <TableCell>Expires: {new Date(grocery.expirationDate).toLocaleDateString()}</TableCell>
-             <TableCell> <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity + 1)}>+</Button></TableCell>
+             <TableCell> 
+              <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity + 1)}>
+                <CirclePlus />
+                </Button>
+                </TableCell>
               <Dialog>
                 <DialogTrigger asChild>
                   <TableCell>
-                  <Button asChild>
-                    <div>Edit</div>
+                  <Button size="icon" asChild>
+                    <div><Pencil /></div>
                     </Button>
                   </TableCell>
                   </DialogTrigger>
@@ -77,13 +82,20 @@ export default function GroceryList() {
                     </DialogDescription>
                   </DialogHeader>
                   <Input id="newQuantity" type="number" value={grocery.quantity} onChange={(e) => handleSetQuantity(grocery.id, parseInt(e.target.value))}/>
-                  <DialogClose>
+                  <DialogClose asChild>
                   <Button type="submit">Save</Button>
                   </DialogClose>
                 </DialogContent>
               </Dialog>
-              <TableCell><Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity - 1)}>-</Button></TableCell>
-             <TableCell><Badge variant="destructive" className={grocery.expirationDate < Date.now() ? ""  : "invisible"}>EXPIRED!</Badge></TableCell>
+              <TableCell><Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity - 1)}>
+                <CircleMinus />
+                </Button>
+                </TableCell>
+             <TableCell>
+              <Badge variant="destructive" className={grocery.expirationDate < Date.now() ? ""  : "invisible"}>
+                <TriangleAlert />EXPIRED
+                </Badge>
+                </TableCell>
           </TableRow>
         ))}
         </TableBody>

@@ -5,6 +5,7 @@ import { removeGroceryPreset } from "@/lib/features/preset/presetSlice";
 import { removeGroceriesByPreset } from "@/lib/features/grocery/grocerySlice";
 import { Button } from "./ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
+import { Trash } from "lucide-react";
 
 export default function PresetList() {
     const presets = useAppSelector((state) => state.preset.groceryPresets);
@@ -34,7 +35,7 @@ export default function PresetList() {
                                 size="icon"
                                 onClick={() => handleRemove(preset.id)}
                             >
-                            x
+                            <Trash />
                             </Button>
                         </TableCell>
                         <TableCell>

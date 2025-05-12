@@ -4,6 +4,7 @@ import { useAppDispatch } from "@/lib/hooks";
 import { addGroceryPreset } from "@/lib/features/preset/presetSlice";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { CirclePlus } from "lucide-react";
 
 export default function NewGroceryForm() {
   const [groceryName, setGroceryName] = useState("");
@@ -38,7 +39,7 @@ export default function NewGroceryForm() {
       />
       
       <Button type="submit">
-        Add Preset
+        <CirclePlus /> Add Preset
       </Button>
     </form>
   );
