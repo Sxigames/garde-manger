@@ -4,6 +4,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { removeGroceryPreset } from "@/lib/features/preset/presetSlice";
 import { removeGroceriesByPreset } from "@/lib/features/grocery/grocerySlice";
 import { Button } from "./ui/button";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 
 export default function PresetList() {
     const presets = useAppSelector((state) => state.preset.groceryPresets);
@@ -15,10 +16,19 @@ export default function PresetList() {
     };
     return (
         <div>
-            <ul className="flex flex-col gap-[32px]">
+            <Table>
+                <TableCaption>Your grocery presets</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Remove</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Unit</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
                 {presets.map((preset) => (
-                    <li key={preset.id} className="flex flex-col gap-[32px]">
-                        <div className="flex flex-row gap-[32px]">
+                    <TableRow key={preset.id}>
+                        <TableCell>
                             <Button
                                 variant="destructive"
                                 size="icon"
@@ -26,13 +36,18 @@ export default function PresetList() {
                             >
                             x
                             </Button>
-                            <span>{preset.name}</span>
-                            <span>{preset.unit}</span>
-                        </div>
-                    </li>
+                        </TableCell>
+                        <TableCell>
+                            {preset.name}
+                        </TableCell>
+                        <TableCell>
+                            {preset.unit}
+                        </TableCell>
+                    </TableRow>
                 ))}
-
-            </ul>
+                
+                </TableBody>
+            </Table>
         </div>
     )
 }

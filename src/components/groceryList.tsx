@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 
 export default function GroceryList() {
   const groceries = useAppSelector((state) => state.grocery.groceries);
@@ -28,11 +29,25 @@ export default function GroceryList() {
 
   return (
     <div>
-      <ul className="flex flex-col gap-[32px]">
+      <Table>
+        <TableCaption>Your groceries</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Remove</TableHead>
+            <TableHead>Quantity</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Unit</TableHead>
+            <TableHead>Expiration Date</TableHead>
+            <TableHead>Increase</TableHead>
+            <TableHead>Change Quantity</TableHead>
+            <TableHead>Decrease</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
         {groceries.map((grocery) => (
           
-          <li key={grocery.id} className="flex flex-col gap-[32px]">
-            <div className="flex flex-row gap-[32px]">
+          <TableRow key={grocery.id}>
+              <TableCell>
               <Button
                 variant="destructive"
                 size="icon"
@@ -40,14 +55,17 @@ export default function GroceryList() {
               >
                 x
               </Button>
-              <span>{grocery.quantity}</span>
-              <span>{presets.find((preset) => preset.id === grocery.presetID)?.name}</span>
-              <span>{presets.find((preset) => preset.id === grocery.presetID)?.unit}</span>
-              <span>Expires: {new Date(grocery.expirationDate).toLocaleDateString()}</span>
-              <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity + 1)}>+</Button>
+              </TableCell>
+              <TableCell>{grocery.quantity}</TableCell>
+              <TableCell>{presets.find((preset) => preset.id === grocery.presetID)?.name}</TableCell>
+              <TableCell>{presets.find((preset) => preset.id === grocery.presetID)?.unit}</TableCell>
+              <TableCell>Expires: {new Date(grocery.expirationDate).toLocaleDateString()}</TableCell>
+             <TableCell> <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity + 1)}>+</Button></TableCell>
               <Dialog>
                 <DialogTrigger asChild>
+                  <TableCell>
                   <Button>Edit</Button>
+                  </TableCell>
                   </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
@@ -62,12 +80,12 @@ export default function GroceryList() {
                   </DialogClose>
                 </DialogContent>
               </Dialog>
-              <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity - 1)}>-</Button>
-             <Badge variant="destructive" hidden={grocery.expirationDate < Date.now()}>EXPIRED!</Badge>
-            </div>
-          </li>
+              <TableCell><Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity - 1)}>-</Button></TableCell>
+             <TableCell><Badge variant="destructive" className={grocery.expirationDate < Date.now() ? ""  : "invisible"}>EXPIRED!</Badge></TableCell>
+          </TableRow>
         ))}
-      </ul>
+        </TableBody>
+      </Table>
     </div>
   );
 }
