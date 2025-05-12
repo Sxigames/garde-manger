@@ -6,7 +6,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Camera, CirclePlus } from "lucide-react";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader } from "./ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogClose } from "./ui/dialog";
 
 export default function NewGroceryForm() {
   const [groceryName, setGroceryName] = useState("");
@@ -87,9 +87,11 @@ export default function NewGroceryForm() {
         </DialogContent>
       </Dialog>
       </div>
+      <DialogClose asChild>
       <Button type="submit">
         <CirclePlus /> Add Preset
       </Button>
+      </DialogClose>
     </form>
   );
 }

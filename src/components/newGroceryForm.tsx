@@ -8,7 +8,7 @@ import { Button } from "./ui/button";
 import { Camera, CirclePlus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Label } from "./ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Scanner } from "@yudiel/react-qr-scanner"
 
 export default function NewGroceryForm() {
@@ -46,8 +46,8 @@ export default function NewGroceryForm() {
         <TabsTrigger value="select">Select Preset</TabsTrigger>
         <TabsTrigger value="barcode">Input Barcode</TabsTrigger>
       </TabsList>
-      <TabsContent value="select">
         <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
+      <TabsContent value="select">
           <Select onValueChange={(value) => setSelectedPreset(Number(value))}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a preset" />
@@ -60,25 +60,8 @@ export default function NewGroceryForm() {
             ))}
             </SelectContent>
           </Select>
-          <Input
-            type="number"
-            value={groceryQuantity}
-            onChange={(e) => setGroceryQuantity(Number(e.target.value))}
-            placeholder="Quantity"
-          />
-          <Input
-            type="date"
-            value={new Date(groceryExpirationDate).toISOString().split("T")[0]}
-            onChange={(e) => setGroceryExpirationDate(new Date(e.target.value).getTime())}
-            placeholder="Expiration date"
-          />
-          <Button type="submit" >
-            <CirclePlus /> Add Grocery
-          </Button>
-        </form>
     </TabsContent>
       <TabsContent value="barcode">
-              <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
                 <div className="flex flex-row gap-2">
                   <Input
                     type="text"
@@ -125,7 +108,9 @@ export default function NewGroceryForm() {
                   <Label>{presets.find(preset => preset.barcode === groceryBarcode)?.name || "no matching barcode"}</Label>
                 </div>
               
-              <Input
+             
+        </TabsContent>
+         <Input
                 type="number"
                 value={groceryQuantity}
                 onChange={(e) => setGroceryQuantity(Number(e.target.value))}
@@ -137,11 +122,13 @@ export default function NewGroceryForm() {
                 onChange={(e) => setGroceryExpirationDate(new Date(e.target.value).getTime())}
                 placeholder="Expiration date"
               />
+              <DialogClose asChild>
               <Button type="submit" >
                 <CirclePlus /> Add Grocery
               </Button>
+              </DialogClose>
             </form>
-        </TabsContent>
+
     </Tabs>
   );
 }
