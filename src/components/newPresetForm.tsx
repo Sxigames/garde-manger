@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useAppDispatch } from "@/lib/hooks";
 import { addGroceryPreset } from "@/lib/features/preset/presetSlice";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export default function NewGroceryForm() {
   const [groceryName, setGroceryName] = useState("");
@@ -22,24 +24,22 @@ export default function NewGroceryForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
-      <input
+      <Input
         type="text"
         value={groceryName}
         onChange={(e) => setGroceryName(e.target.value)}
         placeholder="Grocery name"
-        className="border border-gray-300 rounded p-2"
       />
-      <input
+      <Input
         type="text"
         value={groceryUnit}
         onChange={(e) => setGroceryUnit(e.target.value)}
         placeholder="Measurement unit"
-        className="border border-gray-300 rounded p-2"
       />
       
-      <button type="submit" className="bg-blue-500 text-white rounded p-2">
+      <Button type="submit">
         Add Preset
-      </button>
+      </Button>
     </form>
   );
 }

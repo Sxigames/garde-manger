@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
+import { Badge } from "./ui/badge";
 
 export default function GroceryList() {
   const groceries = useAppSelector((state) => state.grocery.groceries);
@@ -32,19 +33,22 @@ export default function GroceryList() {
           
           <li key={grocery.id} className="flex flex-col gap-[32px]">
             <div className="flex flex-row gap-[32px]">
-              <button
-                className="bg-red-500 text-white rounded p-2"
+              <Button
+                variant="destructive"
+                size="icon"
                 onClick={() => handleRemove(grocery.id)}
               >
                 x
-              </button>
+              </Button>
               <span>{grocery.quantity}</span>
               <span>{presets.find((preset) => preset.id === grocery.presetID)?.name}</span>
               <span>{presets.find((preset) => preset.id === grocery.presetID)?.unit}</span>
               <span>Expires: {new Date(grocery.expirationDate).toLocaleDateString()}</span>
-              <button onClick={() => handleSetQuantity(grocery.id, grocery.quantity + 1)}>+</button>
+              <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity + 1)}>+</Button>
               <Dialog>
-                <DialogTrigger><Button>Edit</Button></DialogTrigger>
+                <DialogTrigger asChild>
+                  <Button>Edit</Button>
+                  </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>New Quantity</DialogTitle>
@@ -58,8 +62,8 @@ export default function GroceryList() {
                   </DialogClose>
                 </DialogContent>
               </Dialog>
-              <button onClick={() => handleSetQuantity(grocery.id, grocery.quantity - 1)}>-</button>
-             <span className={grocery.expirationDate < Date.now() ? "text-red-600" : "invisible"}>EXPIRED!</span>
+              <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity - 1)}>-</Button>
+             <Badge variant="destructive" hidden={grocery.expirationDate < Date.now()}>EXPIRED!</Badge>
             </div>
           </li>
         ))}

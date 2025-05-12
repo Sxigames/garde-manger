@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addGrocery } from "@/lib/features/grocery/grocerySlice";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export default function NewGroceryForm() {
   const presets = useAppSelector((state) => state.preset.groceryPresets);
@@ -26,35 +29,34 @@ export default function NewGroceryForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
-      <select
-        value={selectedPreset ?? ""}
-        onChange={(e) => setSelectedPreset(Number(e.target.value))}
-        className="border border-gray-300 rounded p-2"
-      >
-        <option value="" disabled>Select a preset</option>
+      <Select onValueChange={(value) => setSelectedPreset(Number(value))}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Select a preset" />
+        </SelectTrigger>
+        <SelectContent>
         {presets.map((preset) => (
-          <option key={preset.id} value={preset.id}>
+          <SelectItem key={preset.id} value={preset.id.toString()}>
             {preset.name}
-          </option>
+          </SelectItem>
         ))}
-      </select>
-       <input
+        </SelectContent>
+      </Select>
+       <Input
         type="number"
         value={groceryQuantity}
         onChange={(e) => setGroceryQuantity(Number(e.target.value))}
         placeholder="Quantity"
         className="border border-gray-300 rounded p-2"
       />
-      <input
+      <Input
         type="date"
         value={new Date(groceryExpirationDate).toISOString().split("T")[0]}
         onChange={(e) => setGroceryExpirationDate(new Date(e.target.value).getTime())}
         placeholder="Expiration date"
-        className="border border-gray-300 rounded p-2"
       />
-      <button type="submit" className="bg-blue-500 text-white rounded p-2">
+      <Button type="submit" >
         Add Grocery
-      </button>
+      </Button>
     </form>
   );
 }
