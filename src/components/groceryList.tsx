@@ -28,7 +28,7 @@ export default function GroceryList() {
   const handleSetQuantity = (id: number, quantity: number) => {
     dispatch(setQuantity({ id, quantity }));
   }
-
+  
   return (
     <div>
       <Table>
@@ -48,66 +48,69 @@ export default function GroceryList() {
           </TableRow>
         </TableHeader>
         <TableBody>
-        {groceries.map((grocery) => (
-          
-          <TableRow key={grocery.id}>
+        {groceries.map((grocery) => {
+          const preset = presets.find((preset) => preset.id === grocery.presetID);
+          return (
+            <TableRow key={grocery.id}>
               <TableCell>
-              <Button
-                variant="destructive"
-                size="icon"
-                onClick={() => handleRemove(grocery.id)}
-              >
-                <Trash />
-              </Button>
+          <Button
+            variant="destructive"
+            size="icon"
+            onClick={() => handleRemove(grocery.id)}
+          >
+            <Trash />
+          </Button>
               </TableCell>
               <TableCell>
-                {presets.find((preset) => preset.id === grocery.presetID)?.image ? (
-                  <Image src={presets.find((preset) => preset.id === grocery.presetID)?.image || "/fallback-image.png"} alt={presets.find((preset) => preset.id === grocery.presetID)?.name || "Grocery item"} width={20} height={20}/>
-                ) : (
-                  <CookingPot />
-                )}
+          {preset?.image ? (
+            <Image src={preset.image} alt={preset.name} width={20} height={20}/>
+          ) : (
+            <CookingPot />
+          )}
               </TableCell>
               <TableCell>{grocery.quantity}</TableCell>
-              <TableCell>{presets.find((preset) => preset.id === grocery.presetID)?.name}</TableCell>
-              <TableCell>{presets.find((preset) => preset.id === grocery.presetID)?.unit}</TableCell>
+              <TableCell>{preset?.name}</TableCell>
+              <TableCell>{preset?.unit}</TableCell>
               <TableCell>Expires: {new Date(grocery.expirationDate).toLocaleDateString()}</TableCell>
-             <TableCell> 
-              <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity + 1)}>
-                <CirclePlus />
-                </Button>
-                </TableCell>
+              <TableCell> 
+          <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity + 1)}>
+            <CirclePlus />
+          </Button>
+              </TableCell>
               <Dialog>
-                <DialogTrigger asChild>
-                  <TableCell>
-                  <Button size="icon" asChild>
-                    <div><Pencil /></div>
-                    </Button>
-                  </TableCell>
-                  </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>New Quantity</DialogTitle>
-                    <DialogDescription>
-                      Input the new quantity for {presets.find((preset) => preset.id === grocery.presetID)?.name}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <Input id="newQuantity" type="number" value={grocery.quantity} onChange={(e) => handleSetQuantity(grocery.id, parseInt(e.target.value))}/>
-                  <DialogClose asChild>
-                  <Button type="submit">Save</Button>
-                  </DialogClose>
-                </DialogContent>
+          <DialogTrigger asChild>
+            <TableCell>
+              <Button size="icon" asChild>
+                <div><Pencil /></div>
+              </Button>
+            </TableCell>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>New Quantity</DialogTitle>
+              <DialogDescription>
+                Input the new quantity for {preset?.name}
+              </DialogDescription>
+            </DialogHeader>
+            <Input id="newQuantity" type="number" value={grocery.quantity} onChange={(e) => handleSetQuantity(grocery.id, parseInt(e.target.value))}/>
+            <DialogClose asChild>
+              <Button type="submit">Save</Button>
+            </DialogClose>
+          </DialogContent>
               </Dialog>
-              <TableCell><Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity - 1)}>
-                <CircleMinus />
-                </Button>
-                </TableCell>
-             <TableCell>
-              <Badge variant="destructive" className={grocery.expirationDate < Date.now() ? ""  : "invisible"}>
-                <TriangleAlert />EXPIRED
-                </Badge>
-                </TableCell>
-          </TableRow>
-        ))}
+              <TableCell>
+          <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity - 1)}>
+            <CircleMinus />
+          </Button>
+              </TableCell>
+              <TableCell>
+          <Badge variant="destructive" className={grocery.expirationDate < Date.now() ? "" : "invisible"}>
+            <TriangleAlert />EXPIRED
+          </Badge>
+              </TableCell>
+            </TableRow>
+          );
+        })}
         </TableBody>
       </Table>
     </div>
