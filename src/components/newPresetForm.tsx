@@ -19,7 +19,7 @@ export default function NewGroceryForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const base64 = await toBase64(groceryImage as File);
+    const base64 = groceryImage ? await toBase64(groceryImage as File) : null;
     if (groceryName.trim() === "") return;
     dispatch(addGroceryPreset({
       id: Date.now(),
