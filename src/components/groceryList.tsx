@@ -37,10 +37,10 @@ export default function GroceryList() {
           <TableRow>
             <TableHead></TableHead>
             <TableHead></TableHead>
-            <TableHead>Quantity</TableHead>
+            <TableHead>Qt.</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Unit</TableHead>
-            <TableHead>Expiration Date</TableHead>
+            <TableHead>Expires</TableHead>
             <TableHead></TableHead>
             <TableHead></TableHead>
             <TableHead></TableHead>
@@ -71,7 +71,7 @@ export default function GroceryList() {
               <TableCell>{grocery.quantity}</TableCell>
               <TableCell>{preset?.name}</TableCell>
               <TableCell>{preset?.unit}</TableCell>
-              <TableCell>Expires: {new Date(grocery.expirationDate).toLocaleDateString()}</TableCell>
+              <TableCell>{new Date(grocery.expirationDate).toLocaleDateString()}</TableCell>
               <TableCell> 
           <Button variant="outline" size="icon" onClick={() => handleSetQuantity(grocery.id, grocery.quantity + 1)}>
             <CirclePlus />

@@ -32,7 +32,7 @@ const pathname = usePathname()
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-300`}
       >
         <Provider store={store}>
           <PersistGate loading={null} persistor={persitor}>
@@ -43,7 +43,7 @@ const pathname = usePathname()
             <TabsTrigger value="/presets" asChild><Link href="/presets">Presets</Link></TabsTrigger>
           </TabsList>
           <TabsContent value={pathname}>
-            <Card >
+            <Card className="w-fit min-w-full min-h-full h-fit p-4">
           {children}
           </Card>
           </TabsContent>
