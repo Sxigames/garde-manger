@@ -37,7 +37,7 @@ const pathname = usePathname()
         <Provider store={store}>
           <PersistGate loading={null} persistor={persitor}>
             <Tabs value={pathname} className="w-full p-4">
-          <TabsList>
+          <TabsList className="w-full bg-gray-100">
             <TabsTrigger value="title" disabled>le garde manger</TabsTrigger>
             <TabsTrigger value="/groceries" asChild><Link href="/groceries">Groceries</Link></TabsTrigger>
             <TabsTrigger value="/presets" asChild><Link href="/presets">Presets</Link></TabsTrigger>
