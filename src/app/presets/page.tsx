@@ -28,3 +28,8 @@ export default function Presets() {
         </div>
     );
     }
+
+export const metadata = {
+    title: "garde manger | Presets",
+    description: "Manage your grocery presets"
+};

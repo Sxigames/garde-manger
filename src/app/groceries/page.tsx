@@ -28,4 +28,8 @@ export default function Groceries() {
       </div>
   );
 }
+export const metadata = {
+  title: "garde manger | Groceries",
+  description: "Manage your groceries"
+};
 
