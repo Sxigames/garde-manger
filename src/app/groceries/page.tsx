@@ -1,5 +1,6 @@
 import GroceryList from "@/components/groceryList";
 import NewGroceryForm from "@/components/newGroceryForm";
+import NotificationManager from "@/components/notifcationManager";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogDescription, DialogTitle  } from "@/components/ui/dialog";
 import { CirclePlus } from "lucide-react";
@@ -22,6 +23,20 @@ export default function Groceries() {
                 </DialogDescription>
               </DialogHeader>
               <NewGroceryForm />
+              </DialogContent>
+          </Dialog>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>Manage notifications</Button>
+              </DialogTrigger>
+          <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Manage notications</DialogTitle>
+                <DialogDescription>
+                  Manage expiration notifications for your groceries.
+                </DialogDescription>
+              </DialogHeader>
+              <NotificationManager />
               </DialogContent>
           </Dialog>
         </main>
