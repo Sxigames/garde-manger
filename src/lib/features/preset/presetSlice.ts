@@ -21,6 +21,10 @@ const groceryPresetSlice = createSlice({
   initialState,
   reducers: {
     addGroceryPreset: (state, action: PayloadAction<GroceryPreset>) => {
+      if(state.groceryPresets.some((preset) => preset.name === action.payload.name)) {
+        alert("Grocery preset already exists");
+        return;
+      }
       state.groceryPresets.push(action.payload);
     },
     removeGroceryPreset: (state, action: PayloadAction<number>) => {
