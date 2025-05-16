@@ -1,11 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { removeGrocery, setQuantity } from "@/lib/features/grocery/grocerySlice";
 import { DataTable } from './data-table';
 import { GroceryOnTable, columns } from './columns';
-import { get } from 'http';
 
 export default function GroceryList() {
     const groceries = useAppSelector((state) => state.grocery.groceries);
