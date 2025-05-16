@@ -1,0 +1,82 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { ColumnDef } from '@tanstack/react-table';
+import { MoreHorizontal } from 'lucide-react';
+
+export type GroceryOnTable = {
+    id: string;
+    name: string;
+    quantity: number;
+    unit: string;
+    expirationDate: string;
+    deleteFunction: () => void;
+    setQuantityFunction: (quantity: number) => void;
+}
+
+export const columns: ColumnDef<GroceryOnTable>[] = [
+    {
+        accessorKey: 'name',
+        header: 'Name',
+    },
+    {
+        accessorKey: 'quantity',
+        header: 'Quantity',
+    },
+    {
+        accessorKey: 'unit',
+        header: 'Unit',
+    },
+    {
+        accessorKey: 'expirationDate',
+        header: 'Expiration Date',
+        cell: ({ row }) => {
+            const date = new Date(row.getValue('expirationDate'));
+            return date.toLocaleDateString();
+        }
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => {
+            const { deleteFunction, setQuantityFunction, quantity } = row.original;
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                                variant="destructive"
+                                onClick={() => deleteFunction()}
+                            >
+                                Delete
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+
+                                onClick={() => setQuantityFunction(quantity + 1)}
+                            >
+                                Increase Quantity
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => setQuantityFunction(1)}
+                            >
+                                Set Quantity
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => setQuantityFunction(quantity - 1)}
+                            >
+                                Decrease Quantity
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+        )}
+    }
+];
+
+
