@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal, TriangleAlert } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal, TriangleAlert } from 'lucide-react';
 
 export type GroceryOnTable = {
     id: string;
@@ -27,11 +27,29 @@ export const columns: ColumnDef<GroceryOnTable>[] = [
     },
     {
         accessorKey: 'name',
-        header: 'Name',
+        header: ({column}) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >Name
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+            )
+        },
     },
     {
         accessorKey: 'quantity',
-        header: 'Quantity',
+        header: ({column}) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >Quantity
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+            )
+        },
     },
     {
         accessorKey: 'unit',
@@ -39,7 +57,16 @@ export const columns: ColumnDef<GroceryOnTable>[] = [
     },
     {
         accessorKey: 'expirationDate',
-        header: 'Expiration Date',
+        header: ({column}) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >Expires
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+            )
+        },
         cell: ({ row }) => {
             const date = new Date(row.getValue('expirationDate'));
             return date.toLocaleDateString();
