@@ -6,7 +6,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Camera, CirclePlus } from "lucide-react";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogClose } from "./ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogClose, DialogFooter } from "./ui/dialog";
 import { Label } from "./ui/label";
 
 export default function NewGroceryForm() {
@@ -96,11 +96,13 @@ export default function NewGroceryForm() {
       <Label>Image(optional)</Label>
       <Input type="file" onChange={(e) => setGroceryImage(e.target.files ? e.target.files[0] : null)} />
       </div>
-      <DialogClose asChild>
+      <DialogFooter>
+      <DialogClose asChild className="w-full">
       <Button type="submit">
         <CirclePlus /> Add Preset
       </Button>
       </DialogClose>
+      </DialogFooter>
     </form>
   );
 }

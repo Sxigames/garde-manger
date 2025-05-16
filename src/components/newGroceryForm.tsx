@@ -8,7 +8,7 @@ import { Button } from "./ui/button";
 import { Camera, CirclePlus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Label } from "./ui/label";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Scanner } from "@yudiel/react-qr-scanner"
 
 export default function NewGroceryForm() {
@@ -122,11 +122,13 @@ export default function NewGroceryForm() {
                 onChange={(e) => setGroceryExpirationDate(new Date(e.target.value).getTime())}
                 placeholder="Expiration date"
               />
+              <DialogFooter>
               <DialogClose asChild>
-              <Button type="submit" >
+              <Button type="submit" className="w-full">
                 <CirclePlus /> Add Grocery
               </Button>
               </DialogClose>
+              </DialogFooter>
             </form>
 
     </Tabs>
