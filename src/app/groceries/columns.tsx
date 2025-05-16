@@ -10,11 +10,11 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal, TriangleAlert } from 'lucide-react';
 
 export type GroceryOnTable = {
-    id: string;
+    id: number;
     name: string;
     quantity: number;
     unit: string;
-    expirationDate: string;
+    expirationDate: number;
     deleteFunction: () => void;
     setQuantityFunction: (quantity: number) => void;
 }

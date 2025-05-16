@@ -50,7 +50,7 @@ function PushNotificationManager() {
     setSubscription(sub)
     const serializedSub = JSON.parse(JSON.stringify(sub))
     await subscribeUser(serializedSub)
-    await sendNotification('You have subscribed to push notifications!')
+    await sendNotification('garde manger', 'You have subscribed to push notifications!')
   }
  
   async function unsubscribeFromPush() {
@@ -88,6 +88,7 @@ function InstallPrompt() {
  
   useEffect(() => {
     setIsIOS(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
     )
  
@@ -109,7 +110,7 @@ function InstallPrompt() {
             {' '}
             ⎋{' '}
           </span>
-          and then "Add to Home Screen"
+          and then &quot;Add to Home Screen&quot;
           <span role="img" aria-label="plus icon">
             {' '}
             ➕{' '}

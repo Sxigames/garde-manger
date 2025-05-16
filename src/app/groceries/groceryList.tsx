@@ -20,9 +20,9 @@ const data: GroceryOnTable[] = groceries.map((grocery) => {
     const preset = presets.find((preset) => preset.id === grocery.presetID);
     return {
         id: grocery.id,
-        name: preset?.name,
+        name: preset?.name ?? "",
         quantity: grocery.quantity,
-        unit: preset?.unit,
+        unit: preset?.unit ?? "",
         expirationDate: grocery.expirationDate,
         deleteFunction: () => handleRemove(grocery.id),
         setQuantityFunction: (quantity: number) => handleSetQuantity(grocery.id, quantity),
