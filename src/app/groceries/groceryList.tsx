@@ -28,6 +28,7 @@ const data: GroceryOnTable[] = groceries.map((grocery) => {
         quantity: grocery.quantity,
         unit: preset?.unit ?? "",
         expirationDate: grocery.expirationDate,
+        icon: preset?.image,
         deleteFunction: () => handleRemove(grocery.id),
         setQuantityFunction: (quantity: number) => handleSetQuantity(grocery.id, quantity),
     };

@@ -7,7 +7,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Input } from '@/components/ui/input';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal, TriangleAlert } from 'lucide-react';
+import { ArrowUpDown, CookingPot, MoreHorizontal, TriangleAlert } from 'lucide-react';
+import Image from 'next/image';
 
 export type GroceryOnTable = {
     id: number;
@@ -15,6 +16,7 @@ export type GroceryOnTable = {
     quantity: number;
     unit: string;
     expirationDate: number;
+    icon?: string;
     deleteFunction: () => void;
     setQuantityFunction: (quantity: number) => void;
 }
@@ -25,6 +27,16 @@ export const columns: ColumnDef<GroceryOnTable>[] = [
         cell: ({ row }) => {
             const expires: number = row.getValue('expirationDate');
             return expires < Date.now() ?  <Badge variant="destructive"><TriangleAlert />EXPIRED</Badge> : null;
+        }
+    },
+    {
+        accessorKey: 'icon',
+        header: 'Icon',
+        cell: ({ row }) => {
+            const icon = row.getValue('icon');
+            return typeof icon === 'string' && icon
+                ? <Image src={icon} alt="icon" className="h-8 w-8 rounded-full" width={8} height={8} />
+                : <CookingPot />;
         }
     },
     {
