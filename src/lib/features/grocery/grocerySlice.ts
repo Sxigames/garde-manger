@@ -41,8 +41,14 @@ const grocerySlice = createSlice({
             (grocery) => grocery.presetID !== action.payload
         );
     },
+    removeExpiredGroceries: (state) => {
+        const currentDate = Date.now();
+        state.groceries = state.groceries.filter(
+            (grocery) => grocery.expirationDate > currentDate
+        );
   },
+}
 });
 
-export const { addGrocery, removeGrocery, setQuantity, removeGroceriesByPreset } = grocerySlice.actions;
+export const { addGrocery, removeGrocery, setQuantity, removeGroceriesByPreset, removeExpiredGroceries } = grocerySlice.actions;
 export default grocerySlice.reducer;
