@@ -27,6 +27,7 @@ export const columns: ColumnDef<GroceryOnTable>[] = [
     },
     {
         accessorKey: 'name',
+        enableHiding: false,
         header: ({column}) => {
             return (
                 <Button
