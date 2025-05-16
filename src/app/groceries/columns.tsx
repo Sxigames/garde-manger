@@ -2,7 +2,9 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal, TriangleAlert } from 'lucide-react';
@@ -76,8 +78,9 @@ export const columns: ColumnDef<GroceryOnTable>[] = [
     {
         id: 'actions',
         cell: ({ row }) => {
-            const { deleteFunction, setQuantityFunction, quantity } = row.original;
+            const { deleteFunction, setQuantityFunction, quantity, name } = row.original;
             return (
+                <Dialog>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -99,11 +102,12 @@ export const columns: ColumnDef<GroceryOnTable>[] = [
                             >
                                 Increase Quantity
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => setQuantityFunction(1)}
-                            >
-                                Set Quantity
-                            </DropdownMenuItem>
+                            <DialogTrigger asChild>
+                                <DropdownMenuItem
+                                >
+                                    Set Quantity
+                                </DropdownMenuItem>
+                            </DialogTrigger>
                             <DropdownMenuItem
                                 onClick={() => setQuantityFunction(quantity - 1)}
                             >
@@ -111,6 +115,20 @@ export const columns: ColumnDef<GroceryOnTable>[] = [
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
+                                                <DialogContent>
+                                <DialogHeader>
+                                <DialogTitle>New Quantity</DialogTitle>
+                                <DialogDescription>
+                                    Input the new quantity for {name}
+                                </DialogDescription>
+                                </DialogHeader>
+                                <Input id="newQuantity" type="number" value={quantity} onChange={(e) => setQuantityFunction(parseInt(e.target.value))}/>
+                                <DialogClose asChild>
+                                <Button type="submit">Save</Button>
+                                </DialogClose>
+                            </DialogContent>
+                                </Dialog>
+
         )}
     }
 ];
