@@ -1,10 +1,11 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, TriangleAlert } from 'lucide-react';
 
 export type GroceryOnTable = {
     id: string;
@@ -17,6 +18,13 @@ export type GroceryOnTable = {
 }
 
 export const columns: ColumnDef<GroceryOnTable>[] = [
+    {
+        id: 'expired',
+        cell: ({ row }) => {
+            const expires: number = row.getValue('expirationDate');
+            return expires < Date.now() ?  <Badge variant="destructive"><TriangleAlert />EXPIRED</Badge> : null;
+        }
+    },
     {
         accessorKey: 'name',
         header: 'Name',
