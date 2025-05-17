@@ -41,6 +41,7 @@ const pathname = usePathname()
             <TabsTrigger value="title" disabled>le garde manger</TabsTrigger>
             <TabsTrigger value="/groceries" asChild><Link href="/groceries">Groceries</Link></TabsTrigger>
             <TabsTrigger value="/presets" asChild><Link href="/presets">Presets</Link></TabsTrigger>
+            <TabsTrigger value="/expirycalendar" asChild><Link href="/expirycalendar">Expiry Calendar</Link></TabsTrigger>
           </TabsList>
           <TabsContent value={pathname}>
             <Card className="w-fit min-w-full min-h-full h-fit p-4">
