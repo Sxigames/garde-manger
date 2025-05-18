@@ -67,6 +67,17 @@ const data: GroceryOnTable[] = groceries.map((grocery) => {
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+                  <Button variant="ghost" className="text-white"
+          onClick={() => {
+            const background = document.querySelector("body");
+            if (background) {
+              background.style.backgroundImage = "url('https://v5.airtableusercontent.com/v3/u/41/41/1747620000000/mAG0SwwJ311vJ_DN3a2nJA/B9LFi6giiwfiRhRNrkFG8I9QB04FvrQ7UQLeCt3ekjhxpLGcQqP2MlSi8hgKvFmcZSei8D_wjRtAW_ZyrV9Dvttm7_wdlP3VbN7JzLvf8BfhAAXzQJmcnOZg__3Z70yACOBlplnI0iXmzHRfhuxMTIdlzdJ8t3BEdfu0m71eSVY/Sf6oCoKe1JUvJQIIXECCiXzSiJuGbBK980C9pbid1Ao')";
+            }
+
+          }}
+          >
+            neighborhood(sunset)
+          </Button>
         </div>
     );
     }

@@ -41,6 +41,7 @@ export default function Groceries() {
               <NotificationManager />
               </DialogContent>
           </Dialog>
+
         </main>
       </div>
   );
