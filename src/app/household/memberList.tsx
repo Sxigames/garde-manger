@@ -11,20 +11,20 @@ export default function MemberList() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<PostgrestError>();
     const supabase = createClient();
-    const fetchMembers = async () => {
-        setLoading(true);
-        const { data, error } = await supabase
-            .rpc('get_or_create_household_members', {});
-        if (error) {
-            setError(error);
-        } else {
-            setMembers(data);
-        }
-        setLoading(false);
-    };
     useEffect(() => {
+        const fetchMembers = async () => {
+            setLoading(true);
+            const { data, error } = await supabase
+                .rpc('get_or_create_household_members', {});
+            if (error) {
+                setError(error);
+            } else {
+                setMembers(data);
+            }
+            setLoading(false);
+        };
         fetchMembers();
-    },);
+    }, [supabase]);
     return (
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
                 {members.map((member) => (
