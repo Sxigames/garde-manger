@@ -21,3 +21,4 @@ export default function LoginPage() {
     </form>
   )
 }
+export const runtime = 'edge';
