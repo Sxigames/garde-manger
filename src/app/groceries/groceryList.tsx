@@ -1,6 +1,6 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from "@/lib/hooks";
+import { useAppSelector } from "@/lib/hooks";
 import { DataTable } from './data-table';
 import { GroceryOnTable, columns } from './columns';
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,6 @@ type grocery = Database['public']['Tables']['grocery']['Row']
 export default function GroceryList() {
     const supabase = createClient();
     const user = useAppSelector((state) => state.user.user);
-    const dispatch = useAppDispatch();
     const [data, setData] = useState<GroceryOnTable[]>([]);
 
     
@@ -115,7 +114,7 @@ export default function GroceryList() {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [user?.householdID, dispatch, supabase]);
+    }, [user?.householdID, supabase]);
     return (
         <div>
         <DataTable
