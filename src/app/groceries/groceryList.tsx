@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { removeGrocery, setQuantity, removeExpiredGroceries } from "@/lib/features/grocery/grocerySlice";
+import { removeExpiredGroceries } from "@/lib/features/grocery/grocerySlice";
 import { DataTable } from './data-table';
 import { GroceryOnTable, columns } from './columns';
 import { Button } from "@/components/ui/button";
@@ -11,11 +11,10 @@ import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import type { Database } from "@/database.types";
 type preset = Database['public']['Tables']['preset']['Row']
-// type grocery = Database['public']['Tables']['grocery']['Row']
+type grocery = Database['public']['Tables']['grocery']['Row']
 
 export default function GroceryList() {
     const supabase = createClient();
-    const groceries = useAppSelector((state) => state.grocery.groceries);    
     const user = useAppSelector((state) => state.user.user);
     const dispatch = useAppDispatch();
     const [data, setData] = useState<GroceryOnTable[]>([]);
@@ -23,14 +22,52 @@ export default function GroceryList() {
     
 
     useEffect(() => {
-        const handleRemove = (id: number) => {
-        dispatch(removeGrocery(id));
+        const handleRemove = async (id: number) => {
+            const { error } = await supabase
+                .from('grocery')
+                .delete()
+                .eq('id', id)
+            if (error) {
+                console.error("Error removing grocery:", error);
+                return;
+            }
+            setData(prevData => prevData.filter(item => item.id !== id));
     };
-    const handleSetQuantity = (id: number, quantity: number) => {
-        dispatch(setQuantity({ id, quantity }));
+    const handleSetQuantity = async (id: number, quantity: number) => {
+        await supabase
+            .from('grocery')
+            .update({ quantity })
+            .eq('id', id)
+            .then(({ error }) => {
+                if (error) {
+                    console.error("Error updating grocery quantity:", error);
+                }
+            });
     };
+    async function fetchGroceries() {
+            if (!user?.householdID) {
+                setData([]);
+                return;
+            }
+      const { data: groceries, error } = await supabase
+                .from('grocery')
+                .select('*')
+                .eq('household_id', user?.householdID)
+            if (error) {
+                console.error("Error fetching groceries:", error);
+                setData([]);
+                return;
+            }
+            return groceries;
+        }
         async function fetchData() {
-            const presetIds = groceries.map(g => g.presetID);
+        const groceries = await fetchGroceries();
+
+            if (!groceries || groceries.length === 0) {
+                setData([]);
+                return;
+            }
+            const presetIds = groceries.map(g => g.preset);
             const { data: presets, error } = await supabase
                 .from('preset')
                 .select('*')
@@ -47,15 +84,15 @@ export default function GroceryList() {
             presets?.forEach((preset: preset) => {
                 presetMap.set(preset.id, preset);
             });
-
-            const tableData: GroceryOnTable[] = groceries.map((grocery) => {
-                const preset = presetMap.get(grocery.presetID);
+            
+            const tableData: GroceryOnTable[] = groceries.map((grocery: grocery) => {
+                const preset = presetMap.get(grocery.preset || 0);
                 return {
-                    id: grocery.id,
+                    id: grocery.id ?? 0,
                     name: preset?.name ?? "",
-                    quantity: grocery.quantity,
+                    quantity: grocery.quantity ?? 0,
                     unit: preset?.unit ?? "",
-                    expirationDate: grocery.expirationDate,
+                    expirationDate:  Date.parse(grocery.expirationdate ?? ""),
                     icon: preset?.image ?? undefined,
                     deleteFunction: () => handleRemove(grocery.id),
                     setQuantityFunction: (quantity: number) => handleSetQuantity(grocery.id, quantity),
@@ -63,13 +100,23 @@ export default function GroceryList() {
             });
             setData(tableData);
         }
-        if (user?.householdID && groceries.length > 0) {
+        if (user?.householdID) {
             fetchData();
         } else {
             setData([]);
         }
-    }, [groceries, user?.householdID, dispatch, supabase]);
+        const channel = supabase.channel('table-db-changes').on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'grocery' },
+            async () => {
+                await fetchData();
+            }
+        ).subscribe();
 
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [user?.householdID, dispatch, supabase]);
     return (
         <div>
         <DataTable
