@@ -1,7 +1,6 @@
 'use client';
 
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { removeExpiredGroceries } from "@/lib/features/grocery/grocerySlice";
 import { DataTable } from './data-table';
 import { GroceryOnTable, columns } from './columns';
 import { Button } from "@/components/ui/button";
@@ -139,7 +138,7 @@ export default function GroceryList() {
                 </DialogHeader>
                 <DialogFooter>
                     <DialogClose asChild>
-                    <Button variant="destructive" onClick={() => dispatch(removeExpiredGroceries())}>
+                    <Button variant="destructive" onClick={async () => await supabase.rpc('delete_expired_groceries', {})}>
                         Remove
                     </Button>
                     </DialogClose>
