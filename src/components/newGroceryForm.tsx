@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addGrocery } from "@/lib/features/grocery/grocerySlice";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
@@ -10,9 +10,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Label } from "./ui/label";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Scanner } from "@yudiel/react-qr-scanner"
+import { createClient } from "@/utils/supabase/client";
 
 export default function NewGroceryForm() {
-  const presets = useAppSelector((state) => state.preset.groceryPresets);
+  const user = useAppSelector((state) => state.user.user);
+  const supabase = createClient();
+  const [presets, setPresets] = useState<{ id: number; name: string; barcode?: string }[]>([]);
+  useEffect(() => {
+    const fetchPresets = async () => {
+      if (!user?.householdID) return; // Ensure household is set before fetching presets
+      const { data, error } = await supabase
+        .from('preset')
+        .select('id, name, barcode')
+        .eq('household_id', user.householdID);
+      if (error) {
+        console.error("Error fetching presets:", error);
+      }
+      else {
+        setPresets(data || []);
+      }
+    };
+    fetchPresets();
+  }, [user?.householdID, supabase]);
+
   const [selectedPreset, setSelectedPreset] = useState<number | null>(null);
   const [groceryQuantity, setGroceryQuantity] = useState(1);
   const [groceryExpirationDate, setGroceryExpirationDate] = useState(Date.now());

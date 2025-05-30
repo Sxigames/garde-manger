@@ -7,32 +7,69 @@ import { GroceryOnTable, columns } from './columns';
 import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from "react";
+import type { Database } from "@/database.types";
+type preset = Database['public']['Tables']['preset']['Row']
+// type grocery = Database['public']['Tables']['grocery']['Row']
 
 export default function GroceryList() {
-    const groceries = useAppSelector((state) => state.grocery.groceries);
-    const presets = useAppSelector((state) => state.preset.groceryPresets);
+    const supabase = createClient();
+    const groceries = useAppSelector((state) => state.grocery.groceries);    
+    const user = useAppSelector((state) => state.user.user);
     const dispatch = useAppDispatch();
+    const [data, setData] = useState<GroceryOnTable[]>([]);
+
     
-    const handleRemove = (id: number) => {
+
+    useEffect(() => {
+        const handleRemove = (id: number) => {
         dispatch(removeGrocery(id));
     };
     const handleSetQuantity = (id: number, quantity: number) => {
         dispatch(setQuantity({ id, quantity }));
-    }
-
-const data: GroceryOnTable[] = groceries.map((grocery) => {
-    const preset = presets.find((preset) => preset.id === grocery.presetID);
-    return {
-        id: grocery.id,
-        name: preset?.name ?? "",
-        quantity: grocery.quantity,
-        unit: preset?.unit ?? "",
-        expirationDate: grocery.expirationDate,
-        icon: preset?.image,
-        deleteFunction: () => handleRemove(grocery.id),
-        setQuantityFunction: (quantity: number) => handleSetQuantity(grocery.id, quantity),
     };
-});
+        async function fetchData() {
+            const presetIds = groceries.map(g => g.presetID);
+            const { data: presets, error } = await supabase
+                .from('preset')
+                .select('*')
+                .in('id', presetIds)
+                .eq('household_id', user?.householdID);
+
+            if (error) {
+                console.error("Error fetching presets:", error);
+                setData([]);
+                return;
+            }
+
+            const presetMap = new Map<number, preset>();
+            presets?.forEach((preset: preset) => {
+                presetMap.set(preset.id, preset);
+            });
+
+            const tableData: GroceryOnTable[] = groceries.map((grocery) => {
+                const preset = presetMap.get(grocery.presetID);
+                return {
+                    id: grocery.id,
+                    name: preset?.name ?? "",
+                    quantity: grocery.quantity,
+                    unit: preset?.unit ?? "",
+                    expirationDate: grocery.expirationDate,
+                    icon: preset?.image ?? undefined,
+                    deleteFunction: () => handleRemove(grocery.id),
+                    setQuantityFunction: (quantity: number) => handleSetQuantity(grocery.id, quantity),
+                };
+            });
+            setData(tableData);
+        }
+        if (user?.householdID && groceries.length > 0) {
+            fetchData();
+        } else {
+            setData([]);
+        }
+    }, [groceries, user?.householdID, dispatch, supabase]);
+
     return (
         <div>
         <DataTable
