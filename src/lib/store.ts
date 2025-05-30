@@ -4,10 +4,12 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import groceryReducer from './features/grocery/grocerySlice';
 import groceryPresetReducer from './features/preset/presetSlice';
+import userReducer from './features/user/userSlice';
 
 const reducers = combineReducers({
     grocery: groceryReducer,
     preset: groceryPresetReducer,
+    user: userReducer,
 });
 const persistConfig = {
     key: 'root',

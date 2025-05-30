@@ -13,7 +13,7 @@ export type Database = {
         Row: {
           created_at: string
           expirationdate: string | null
-          household: number | null
+          household_id: number | null
           id: number
           preset: number | null
           quantity: number | null
@@ -21,7 +21,7 @@ export type Database = {
         Insert: {
           created_at?: string
           expirationdate?: string | null
-          household?: number | null
+          household_id?: number | null
           id?: number
           preset?: number | null
           quantity?: number | null
@@ -29,7 +29,7 @@ export type Database = {
         Update: {
           created_at?: string
           expirationdate?: string | null
-          household?: number | null
+          household_id?: number | null
           id?: number
           preset?: number | null
           quantity?: number | null
@@ -43,8 +43,8 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "grocery_household_fkey"
-            columns: ["household"]
+            foreignKeyName: "grocery_household_id_fkey"
+            columns: ["household_id"]
             isOneToOne: false
             referencedRelation: "household"
             referencedColumns: ["id"]
@@ -55,45 +55,37 @@ export type Database = {
         Row: {
           created_at: string
           id: number
-          owner: number | null
         }
         Insert: {
           created_at?: string
           id?: number
-          owner?: number | null
         }
         Update: {
           created_at?: string
           id?: number
-          owner?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "household_owner_fkey"
-            columns: ["owner"]
-            isOneToOne: false
-            referencedRelation: "household_members"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       household_members: {
         Row: {
           created_at: string
           household_id: number | null
           id: number
+          role: string | null
           user_id: string | null
         }
         Insert: {
           created_at?: string
           household_id?: number | null
           id?: number
+          role?: string | null
           user_id?: string | null
         }
         Update: {
           created_at?: string
           household_id?: number | null
           id?: number
+          role?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -108,33 +100,36 @@ export type Database = {
       }
       preset: {
         Row: {
+          barcode: string | null
           created_at: string
-          household: number | null
+          household_id: number | null
           id: number
           image: string | null
-          name: string | null
+          name: string
           unit: string | null
         }
         Insert: {
+          barcode?: string | null
           created_at?: string
-          household?: number | null
+          household_id?: number | null
           id?: number
           image?: string | null
-          name?: string | null
+          name: string
           unit?: string | null
         }
         Update: {
+          barcode?: string | null
           created_at?: string
-          household?: number | null
+          household_id?: number | null
           id?: number
           image?: string | null
-          name?: string | null
+          name?: string
           unit?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "preset_household_fkey"
-            columns: ["household"]
+            columns: ["household_id"]
             isOneToOne: false
             referencedRelation: "household"
             referencedColumns: ["id"]
@@ -146,7 +141,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_household_for_user: {
+        Args: { user_id: string }
+        Returns: number[]
+      }
+      get_or_create_household_members: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          user_id: string
+          household_id: number
+        }[]
+      }
+      get_user_household_id: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      is_user_owner: {
+        Args: { user_id: string; household_id: number }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

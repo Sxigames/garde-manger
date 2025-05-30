@@ -1,22 +1,69 @@
 'use client';
 
-import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { removeGroceryPreset } from "@/lib/features/preset/presetSlice";
-import { removeGroceriesByPreset } from "@/lib/features/grocery/grocerySlice";
 import { Button } from "./ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { CookingPot, Trash } from "lucide-react";
 import Barcode  from "react-barcode";
 import Image from "next/image";
+import type { Database } from "@/database.types";
+import { useState, useEffect } from "react";
+import { createClient } from '@/utils/supabase/client';
+import { useAppSelector } from "@/lib/hooks";
+
+type preset = Database['public']['Tables']['preset']['Row']
 
 export default function PresetList() {
-    const presets = useAppSelector((state) => state.preset.groceryPresets);
-    const dispatch = useAppDispatch();
+    const supabase = createClient();
+    const user = useAppSelector((state) => state.user.user);
+    const [presets, setPresets] = useState<preset[]>([]);
 
-    const handleRemove = (id: number) => {
-        dispatch(removeGroceriesByPreset(id));
-        dispatch(removeGroceryPreset(id));
+    useEffect(() => {
+        const fetchPresets = async () => {
+            if (!user?.householdID) return; // Ensure household is set before fetching presets
+            const { data, error } = await supabase
+                .from('preset')
+                .select('*')
+                .eq('household_id', user.householdID);
+            if (error) {
+                console.error("Error fetching presets:", error);
+            } else {
+                setPresets(data);
+            }
+        };
+        fetchPresets();
+    }, [user, setPresets, supabase]);
+    
+    const handleRemove = async (id: number) => {
+        const { error } = await supabase
+            .from('preset')
+            .delete()
+            .eq('id', id);
+        if (error) {
+            console.error("Error removing preset:", error);
+        } else {
+            setPresets(presets.filter(preset => preset.id !== id));
+        }
     };
+    useEffect(() => {
+        if (!user?.householdID) return;
+        const channel = supabase.channel('table-db-changes').on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'preset' },
+            async () => {
+                const { data, error } = await supabase
+                    .from('preset')
+                    .select('*')
+                    .eq('household_id', user.householdID);
+                if (!error && data) {
+                    setPresets(data);
+                }
+            }
+        ).subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [supabase, user?.householdID]);
     return (
         <div>
             <Table>
