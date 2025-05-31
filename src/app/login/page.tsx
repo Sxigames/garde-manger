@@ -22,3 +22,8 @@ export default function LoginPage() {
   )
 }
 export const runtime = 'edge';
+
+export const metadata = {
+  title: 'Login',
+  description: 'garde manger login page',
+}
