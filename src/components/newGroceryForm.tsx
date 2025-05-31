@@ -1,7 +1,6 @@
 'use client';
-import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { addGrocery } from "@/lib/features/grocery/grocerySlice";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "@/lib/hooks";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -10,28 +9,49 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Label } from "./ui/label";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Scanner } from "@yudiel/react-qr-scanner"
+import { createClient } from "@/utils/supabase/client";
 
 export default function NewGroceryForm() {
-  const presets = useAppSelector((state) => state.preset.groceryPresets);
+  const user = useAppSelector((state) => state.user.user);
+  const supabase = createClient();
+  const [presets, setPresets] = useState<{ id: number; name: string; barcode?: string }[]>([]);
+  useEffect(() => {
+    const fetchPresets = async () => {
+      if (!user?.householdID) return; // Ensure household is set before fetching presets
+      const { data, error } = await supabase
+        .from('preset')
+        .select('id, name, barcode')
+        .eq('household_id', user.householdID);
+      if (error) {
+        console.error("Error fetching presets:", error);
+      }
+      else {
+        setPresets(data || []);
+      }
+    };
+    fetchPresets();
+  }, [user?.householdID, supabase]);
+
   const [selectedPreset, setSelectedPreset] = useState<number | null>(null);
   const [groceryQuantity, setGroceryQuantity] = useState(1);
-  const [groceryExpirationDate, setGroceryExpirationDate] = useState(Date.now());
+  const [groceryExpirationDate, setGroceryExpirationDate] = useState(new Date());
   const [groceryBarcode, setGroceryBarcode] = useState("");
   const [scannerOpen, setScannerOpen] = useState(false);
-  const dispatch = useAppDispatch();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedPreset === null) return;
-    dispatch(addGrocery({
-      id: Date.now(),
-      presetID: selectedPreset,
-      quantity: groceryQuantity,
-      expirationDate: groceryExpirationDate,
-    }));
+    await supabase
+      .from('grocery')
+      .insert({
+        preset: selectedPreset,
+        quantity: groceryQuantity,
+        expirationdate: groceryExpirationDate,
+        household_id: user?.householdID,
+      })
     setSelectedPreset(null);
     setGroceryQuantity(1);
-    setGroceryExpirationDate(Date.now());
+    setGroceryExpirationDate(new Date());
   };
   const setBarcode = (barcode: string) => {
     setGroceryBarcode(barcode);
@@ -119,7 +139,7 @@ export default function NewGroceryForm() {
               <Input
                 type="date"
                 value={new Date(groceryExpirationDate).toISOString().split("T")[0]}
-                onChange={(e) => setGroceryExpirationDate(new Date(e.target.value).getTime())}
+                onChange={(e) => setGroceryExpirationDate(new Date(e.target.value))}
                 placeholder="Expiration date"
               />
               <DialogFooter>

@@ -3,8 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Provider } from "react-redux";
 import { makeStore } from "@/lib/store";
-import { PersistGate } from "redux-persist/integration/react";
-import persistStore from "redux-persist/es/persistStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -20,7 +18,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 const store = makeStore();
-const persitor = persistStore(store);
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -35,7 +32,6 @@ const pathname = usePathname()
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-300`}
       >
         <Provider store={store}>
-          <PersistGate loading={null} persistor={persitor}>
             <Tabs value={pathname} className="w-full p-4">
           <TabsList className="w-full bg-gray-100">
             <TabsTrigger value="title" disabled>le garde manger</TabsTrigger>
@@ -50,7 +46,6 @@ const pathname = usePathname()
           </Card>
           </TabsContent>
           </Tabs>
-          </PersistGate>
           </Provider>
       </body>
     </html>

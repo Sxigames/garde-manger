@@ -1,13 +1,13 @@
 'use client';
 import { useState } from "react";
-import { useAppDispatch } from "@/lib/hooks";
-import { addGroceryPreset } from "@/lib/features/preset/presetSlice";
+import { useAppSelector } from "@/lib/hooks";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Camera, CirclePlus } from "lucide-react";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogClose, DialogFooter } from "./ui/dialog";
 import { Label } from "./ui/label";
+import { createClient } from "@/utils/supabase/client";
 
 export default function NewGroceryForm() {
   const [groceryName, setGroceryName] = useState("");
@@ -15,19 +15,34 @@ export default function NewGroceryForm() {
   const [groceryBarcode, setGroceryBarcode] = useState("");
   const [scannerOpen, setScannerOpen] = useState(false);
   const [groceryImage, setGroceryImage] = useState<File | null>(null);
-  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.user);
+  const supabase = createClient();
+  const addPresettoDatabase = async (preset: { name: string; unit: string; barcode?: string; image?: string }) => {
+    if (!user?.householdID) return; // Ensure household is set before adding preset
+    const { error } = await supabase
+      .from('preset')
+      .insert({
+        name: preset.name,
+        unit: preset.unit,
+        barcode: preset.barcode,
+        image: preset.image,
+        household_id: user.householdID,
+      });
+    if (error) {
+      console.error("Error adding preset to database:", error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const base64 = groceryImage ? await toBase64(groceryImage as File) : null;
     if (groceryName.trim() === "") return;
-    dispatch(addGroceryPreset({
-      id: Date.now(),
-      name: groceryName,
-      unit: groceryUnit,
-      barcode: groceryBarcode ? groceryBarcode : undefined,
-      image: groceryImage ? base64 as string : undefined,
-    }));
+    addPresettoDatabase({
+        name: groceryName,
+        unit: groceryUnit,
+        barcode: groceryBarcode.trim(),
+        image: base64 as string,
+      });
     setGroceryName("");
     setGroceryUnit("");
     setGroceryBarcode("");
