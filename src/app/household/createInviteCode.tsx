@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAppSelector } from "@/lib/hooks";
 import { createClient } from "@/utils/supabase/client";
-import { Label } from "@radix-ui/react-dropdown-menu";
+import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 
 export default function CreateInviteCodeComponent() {

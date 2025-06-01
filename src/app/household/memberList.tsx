@@ -43,7 +43,7 @@ export default function MemberList() {
             <h2 className="text-2xl font-bold">Household Members</h2>
             {loading ? <Skeleton className="w-full h-10" /> : 
                 members.map((member) => (
-                    <div key={member.user_id} className="flex flex-col items-center">
+                    <div key={member.id} className="flex flex-col items-center">
                         <h3>{member.user_id}</h3>
                         <p>{error ? error.message : ""}</p>
                     </div>

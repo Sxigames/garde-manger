@@ -79,7 +79,7 @@ export default function JoinHouseholdComponent(){
             <h2 className="text-2xl font-bold">Join Household</h2>
             <div>
                 <Label className="text-lg font-semibold">Invite Code</Label>
-                <Input content={inviteCode} onChange={(e) => setInviteCode(e.target.value)} />
+                <Input value={inviteCode} onChange={(e) => setInviteCode(e.target.value)} />
                 <Button onClick={handleJoinHousehold}>Join Household</Button>
             </div>
         </div>
