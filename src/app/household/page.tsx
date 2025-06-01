@@ -1,6 +1,7 @@
 import HouseholdSetter from "@/components/householdSetter";
 import CreateInviteCodeComponent from "./createInviteCode";
 import MemberList from "./memberList";
+import JoinHouseholdComponent from "./joinHousehold";
 
 export default function HouseholdPage() {
     return (
@@ -9,7 +10,10 @@ export default function HouseholdPage() {
             <HouseholdSetter />
             <h2>Household</h2>
             <p>Manage your household members.</p>
+            <div className="flex flex-row gap-4">
             <CreateInviteCodeComponent />
+            <JoinHouseholdComponent />
+            </div>
             <MemberList />
         </main>
         </div>

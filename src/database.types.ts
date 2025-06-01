@@ -36,17 +36,17 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "gorcery_preset_fkey"
-            columns: ["preset"]
-            isOneToOne: false
-            referencedRelation: "preset"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "grocery_household_id_fkey"
             columns: ["household_id"]
             isOneToOne: false
             referencedRelation: "household"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "grocery_preset_fkey"
+            columns: ["preset"]
+            isOneToOne: false
+            referencedRelation: "preset"
             referencedColumns: ["id"]
           },
         ]
@@ -66,12 +66,45 @@ export type Database = {
         }
         Relationships: []
       }
+      household_invite_codes: {
+        Row: {
+          code: string
+          created_at: string
+          household_id: number | null
+          id: number
+          used: boolean | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          household_id?: number | null
+          id?: number
+          used?: boolean | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          household_id?: number | null
+          id?: number
+          used?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "household_invite_codes_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "household"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       household_members: {
         Row: {
           created_at: string
           household_id: number | null
           id: number
           role: string | null
+          used_join_code: string | null
           user_id: string | null
         }
         Insert: {
@@ -79,6 +112,7 @@ export type Database = {
           household_id?: number | null
           id?: number
           role?: string | null
+          used_join_code?: string | null
           user_id?: string | null
         }
         Update: {
@@ -86,6 +120,7 @@ export type Database = {
           household_id?: number | null
           id?: number
           role?: string | null
+          used_join_code?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -95,6 +130,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "household"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "household_members_used_join_code_fkey"
+            columns: ["used_join_code"]
+            isOneToOne: false
+            referencedRelation: "household_invite_codes"
+            referencedColumns: ["code"]
           },
         ]
       }
@@ -128,7 +170,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "preset_household_fkey"
+            foreignKeyName: "preset_household_id_fkey"
             columns: ["household_id"]
             isOneToOne: false
             referencedRelation: "household"
@@ -141,6 +183,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      delete_expired_groceries: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       get_household_for_user: {
         Args: { user_id: string }
         Returns: number[]
@@ -156,8 +202,17 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      insert_household_member: {
+        Args: {
+          _user_id: string
+          _household_id: number
+          _role: string
+          _used_join_code: string
+        }
+        Returns: undefined
+      }
       is_user_owner: {
-        Args: { user_id: string; household_id: number }
+        Args: Record<PropertyKey, never>
         Returns: boolean
       }
     }
