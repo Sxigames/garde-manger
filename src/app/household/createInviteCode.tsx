@@ -45,9 +45,26 @@ export default function CreateInviteCodeComponent() {
             setInviteCode("");
         }
     };
+    const handleQuitHousehold = async () => {
+        const userId = (await supabase.auth.getUser()).data.user?.id;
+        if (!userId) {
+            alert("You must be logged in to quit a household.");
+            return;
+        }
+        const { error } = await supabase
+            .from('household_members')
+            .delete()
+            .eq('user_id', userId)
+        if (error) {
+            alert("Failed to quit household: " + error.message);
+            return;
+        }
+        alert("You have successfully quit the household.");
+        window.location.reload();
+    }
     if (!isOwner) {
         return(
-            <Button variant="destructive">Quit Household!</Button>
+            <Button variant="destructive" onClick={handleQuitHousehold}>Quit Household!</Button>
         );
     }
     return (
