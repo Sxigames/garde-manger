@@ -26,7 +26,14 @@ export const columns: ColumnDef<GroceryOnTable>[] = [
         id: 'expired',
         cell: ({ row }) => {
             const expires: number = row.getValue('expirationDate');
-            return expires < Date.now() ?  <Badge variant="destructive"><TriangleAlert />EXPIRED</Badge> : null;
+            if (expires < Date.now()) {
+                return <Badge variant="destructive"><TriangleAlert />EXPIRED</Badge>;
+            }
+            const daysLeft = Math.ceil((expires - Date.now()) / (1000 * 60 * 60 * 24));
+            if (daysLeft <= 3) {
+                return <Badge className="bg-amber-300 text-black"><TriangleAlert />{daysLeft} days left</Badge>;
+            }
+
         }
     },
     {
