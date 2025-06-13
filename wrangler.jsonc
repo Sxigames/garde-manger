@@ -1,0 +1,8 @@
+{
+  "name": "garde-manger",
+  "compatibility_date": "2025-06-13",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist/client/"
+  }
+}
