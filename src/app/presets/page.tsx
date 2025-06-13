@@ -1,6 +1,6 @@
 import HouseholdSetter from "@/components/householdSetter";
 import NewPresetForm from "@/components/newPresetForm";
-import PresetList from "@/components/presetList";
+import PresetList from "@/app/presets/presetList";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CirclePlus } from "lucide-react";

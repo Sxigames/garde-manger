@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppSelector } from "@/lib/hooks";
-import { DataTable } from './data-table';
+import { DataTable } from '@/components/data-table';
 import { GroceryOnTable, columns } from './columns';
 import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";

@@ -11,8 +11,8 @@ import {
     SortingState,
     useReactTable,
     VisibilityState,
-     } from "@tanstack/react-table";
-
+     }
+from "@tanstack/react-table";
 import {
     Table,
     TableBody,
@@ -25,8 +25,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent } from "@/components/ui/dropdown-menu";
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -40,6 +39,8 @@ export function DataTable<TData, TValue>({
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+
     const table = useReactTable({
         data,
         columns,
@@ -58,21 +59,17 @@ export function DataTable<TData, TValue>({
     });
 
     return (
-        <div className="max-w-screen">
-            <div className="flex items-center py-4">
+        <div className="p-4">
+            <div className="flex items-center justify-between mb-4">
                 <Input
                     placeholder="Filter..."
-                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("name")?.setFilterValue(event.target.value)
-                    }
-                    className="max-w-sm"
+                    value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+                    onChange={e => table.getColumn('name')?.setFilterValue(e.target.value)}
+                    className="w-1/3"
                 />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
-                            Columns
-                        </Button>
+                        <Button variant="outline">Columns</Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         {table
